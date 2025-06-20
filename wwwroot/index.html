@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="homepage.css">
+</head>
+<body>
+    <a href="#" style="text-decoration:underline;" id="registerLink" data-toggle="modal" data-target="#registerModal" onclick="Redirect();">Register</a>
+    <a href="#" style="text-decoration:underline" id="loginLink" data-toggle="modal" data-target="#loginModal">Login</a>
+    <a href="#" style="text-decoration: underline; display: none;" id="adminLink" data-toggle="modal" data-target="#adminModal">Admin Panel</a>
+    <a href="#" style="text-decoration: underline; display: none;" id="uploadLink" data-toggle="modal" data-target="#uploadModal">Upload File</a>
+    <a href="#" style="text-decoration: underline;" id="filesLink" data-toggle="modal" data-target="#filesModal">Your Files</a>
+    <a href="#" style="text-decoration:underline; display: none;" id="logOutLink" onclick="LogOut();">Logout</a>
+
+    <!-- Login modal window -->
+    <div style="margin-top: 200px" class="modal" id="loginModal">
+        <h1 style="text-align: center; color:black; font-size: 40px;" class="modal-title">Login</h1>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="loginForm">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="LogIn();">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin modal window -->
+    <div style="margin-top: 200px" class="modal" id="adminModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Admin Panel</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="adminUserList">
+                        <!-- Admin user list will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File upload modal window -->
+    <div style="margin-top: 200px" class="modal" id="uploadModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload File</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="fileInput">Choose file</label>
+                            <input type="file" class="form-control-file" id="fileInput" name="file" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User files modal window -->
+    <div style="margin-top: 200px" class="modal" id="filesModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Your Files</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="fileList">
+                        <!-- User files will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function Redirect() {
+            window.location.href = "register.html";
+        }
+
+        $(document).ready(function () {
+            checkSession();
+        });
+
+        function checkSession() {
+            $.get({
+                url: "/User/CheckSession",
+                success: function (data) {
+                    if (data.userID !== -1) {
+                        userID = data.userID;
+                        updateVisibility();
+                    }
+                }
+            });
+        }
+
+        function updateVisibility() {
+            if (userID !== -1) {
+                $("#loginLink").hide();
+                $("#registerLink").hide();
+                $("#adminLink").show();
+                $("#uploadLink").show();
+                $("#filesLink").show();
+                $("#logOutLink").show();
+            } else {
+                $("#loginLink").show();
+                $("#registerLink").show();
+                $("#adminLink").hide();
+                $("#uploadLink").hide();
+                $("#filesLink").hide();
+                $("#logOutLink").hide();
+            }
+        }
+
+        function LogIn() {
+            var toSend = new FormData();
+            toSend.append("username", $("#username").val());
+            toSend.append("password", $("#password").val());
+
+            $.post({
+                url: "/User/Login",
+                data: toSend,
+                Accept: '/',
+                processData: false,
+                contentType: false,
+                async: false
+            });
+            $.get({
+                url: "/User/GetUser",
+                success: statusSet,
+                async: false
+            });
+            if (userID != -1) {
+                $('#loginModal').modal('hide');
+                $("#registerLink").hide();
+                $("#loginLink").hide();
+                $("#logOutLink").show();
+                $("#adminLink").show();
+                $("#uploadLink").show();
+                $("#filesLink").show();
+            } if (userID == -1) {
+                alert("Wrong username or password!");
+                return;
+            }
+        }
+
+        function LogOut() {
+            $.post({
+                url: "/User/LogOut",
+                processData: false,
+                contentType: false,
+                async: false
+            }).done(function () {
+                userID = -1;
+            }).fail(function (xhr, status, error) {
+                alert("An error occurred: " + error);
+            });
+            $("#registerLink").show();
+            $("#loginLink").show();
+            $("#filesLink").show();
+            $("#logOutLink").hide();
+            $("#adminLink").hide();
+            $("#uploadLink").hide();
+        }
+
+        function LoadUserList() {
+            $.get({
+                url: "/Admin/ListUsers",
+                data: { userID: userID },
+                success: function (response) {
+                    if (response && Array.isArray(response)) {
+                        var userListHtml = '<ul class="list-group">';
+                        response.forEach(function (user) {
+                            userListHtml += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${user.userName}
+                        <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.userID})">Delete</button>
+                        <button class="btn btn-warning btn-sm" onclick="toggleAdmin(${user.userID}, ${user.isAdmin})">
+                            ${user.isAdmin ? 'Revoke Admin' : 'Grant Admin'}
+                        </button>
+                    </li>
+                `;
+                        });
+                        userListHtml += '</ul>';
+                        $('#adminUserList').html(userListHtml);
+                    } else {
+                        $('#adminUserList').html('<p>No users found.</p>');
+                        console.log("No users found.");
+                    }
+                }
+            });
+        }
+
+        function toggleAdmin(userID, isAdmin) {
+            var newAdminStatus = !isAdmin;
+            $.post({
+                url: "/Admin/SetAdminRights",
+                data: { userID: userID, isAdmin: newAdminStatus },
+                success: function () {
+                    alert(`Admin status ${newAdminStatus ? 'granted' : 'revoked'} successfully.`);
+                    LoadUserList();
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred while toggling admin status: " + error);
+                }
+            });
+        }
+
+        function deleteUser(userID) {
+            $.post({
+                url: "/Admin/DeleteUser",
+                data: { userID: userID },
+                success: function () {
+                    alert("User deleted successfully.");
+                    LoadUserList();
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
+                }
+            });
+        }
+
+        function LoadFileList() {
+            $.get({
+                url: "/File/ListUserFiles",
+                success: function (response) {
+                    if (response && Array.isArray(response) && response.length > 0) {
+                        var fileListHtml = '';
+                        let groupedFiles = {};
+
+                        // Group files by userName
+                        response.forEach(function (file) {
+                            if (!groupedFiles[file.userName]) {
+                                groupedFiles[file.userName] = [];
+                            }
+                            groupedFiles[file.userName].push(file);
+                        });
+
+                        // Create HTML for each user and their files
+                        for (const [userName, files] of Object.entries(groupedFiles)) {
+                            fileListHtml += `
+                    <div class="file-list-container">
+                        <h4>${userName} Files</h4>
+                        <ul class="list-group" style="margin-bottom: 10px;">
+                            ${files.map(file => `
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                ${file.nameFile || 'No name'} <!-- Use nameFile from the response -->
+                                <div>
+                                    <a href="/File/DownloadFile?fileID=${file.fileID}&userID=${file.userID}" class="btn btn-info btn-sm" download>Download</a>
+                                    <button class="btn btn-danger btn-sm ml-2" onclick="deleteFile(${file.fileID})">Delete</button>
+                                </div>
+                            </li>
+                            `).join('')}
+                        </ul>
+                    </div>`;
+                        }
+
+                        $('#fileList').html(fileListHtml);
+                    } else {
+                        $('#fileList').html('<p>No files found.</p>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred while loading files: " + error);
+                }
+            });
+        }
+
+        function deleteFile(fileID) {
+            if (confirm('Are you sure you want to delete this file?')) {
+                $.post({
+                    url: "/File/DeleteFile",
+                    data: { fileID: fileID },
+                    success: function () {
+                        alert("File deleted successfully.");
+                        LoadFileList();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
+                    }
+                });
+            }
+        }
+
+        $('#uploadForm').on('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append("userID", userID);
+
+            $.post({
+                url: "/File/UploadFile",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                    $("#uploadForm")[0].reset();
+                    alert("File uploaded successfully.");
+                    LoadFileList();
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
+                }
+            });
+        });
+
+        $('#adminModal').on('show.bs.modal', function () {
+            LoadUserList();
+        });
+
+        $('#filesModal').on('show.bs.modal', function () {
+            LoadFileList();
+        });
+
+        var userID = -1;
+
+        function statusSet(data) {
+            userID = data.userID;
+        }
+    </script>
+</body>
+</html>

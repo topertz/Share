@@ -1,0 +1,43 @@
++---------------------+
+|        User         |
++---------------------+
+| - UserID: INTEGER   |
+| - UserName: TEXT    |
+| - PasswordHash: TEXT|
+| - PasswordSalt: TEXT|
+| - IsAdmin: INTEGER  |
++---------------------+
+| PK  UserID          |
++---------------------+
+            |
+            | 1
+            |
+            | *
++---------------------+
+|      Session        |
++---------------------+
+| - SessionID: INTEGER|
+| - SessionCookie: TEXT|
+| - UserID: INTEGER   |
+| - ValidUntil: INTEGER|
+| - LoginTime: INTEGER|
++---------------------+
+| PK  SessionID       |
+| FK  UserID          |
++---------------------+
+            |
+            | *
+            |
+            | 1
++---------------------+
+|        File         |
++---------------------+
+| - FileID: INTEGER   |
+| - UserID: INTEGER   |
+| - NameFile: TEXT    |
+| - FilePath: TEXT    |
+| - UploadDate: INTEGER|
++---------------------+
+| PK  FileID          |
+| FK  UserID          |
++---------------------+
