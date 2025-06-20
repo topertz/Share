@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Mark\\Documents\\adatbazis_alkalmazasok_keszitese\\Share\\ShareApplication\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\ShareApplication.bundle.scp.css",
+      "PackagePath": "staticwebassets\\ShareApplication.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\Mark\\Documents\\adatbazis_alkalmazasok_keszitese\\Share\\ShareApplication\\wwwroot\\UML_diagram.txt",
+      "PackagePath": "staticwebassets\\UML_diagram.txt"
+    },
+    {
+      "Id": "C:\\Users\\Mark\\Documents\\adatbazis_alkalmazasok_keszitese\\Share\\ShareApplication\\wwwroot\\adatbazis.sql",
+      "PackagePath": "staticwebassets\\adatbazis.sql"
+    },
+    {
+      "Id": "C:\\Users\\Mark\\Documents\\adatbazis_alkalmazasok_keszitese\\Share\\ShareApplication\\wwwroot\\homepage.css",
+      "PackagePath": "staticwebassets\\homepage.css"
+    },
+    {
+      "Id": "C:\\Users\\Mark\\Documents\\adatbazis_alkalmazasok_keszitese\\Share\\ShareApplication\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\Mark\\Documents\\adatbazis_alkalmazasok_keszitese\\Share\\ShareApplication\\wwwroot\\register.css",
+      "PackagePath": "staticwebassets\\register.css"
+    },
+    {
+      "Id": "C:\\Users\\Mark\\Documents\\adatbazis_alkalmazasok_keszitese\\Share\\ShareApplication\\wwwroot\\register.html",
+      "PackagePath": "staticwebassets\\register.html"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.ShareApplication.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.ShareApplication.props",
+      "PackagePath": "build\\ShareApplication.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.ShareApplication.props",
+      "PackagePath": "buildMultiTargeting\\ShareApplication.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.ShareApplication.props",
+      "PackagePath": "buildTransitive\\ShareApplication.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
